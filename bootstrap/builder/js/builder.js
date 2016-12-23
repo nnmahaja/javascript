@@ -1,7 +1,7 @@
 $('document').ready(function() {
-    // not sure why this does not work immediately? boostrap?
-
+    
     /*
+    // this does not work with DOCTYPE html
     $('body').click(function() {
 	// do something here like:
         alert('hey! The body click is working!!!')
@@ -10,28 +10,57 @@ $('document').ready(function() {
 	var x1, y1;
 	
     $('#divDraw').mousedown(function(e) {
-	    var parentOffset = $(this).parent().offset(); 
-	    //or $(this).offset(); if you really just want the current element's offset
-	    var relX = e.pageX - parentOffset.left;
-	    var relY = e.pageY - parentOffset.top;
-	    x1 = e.pageX;
-	    y1 = e.pageY;
-	    /*
-	    $('#divDraw').append('<div style="background-color: #80fc05; ' +
-				 'position: fixed; left: ' + e.pageX + '; top:' + e.pageY + 
-				 '"><p>Success</p></div>')
-	    */
+	var parentOffset = $(this).parent().offset();
+	//or $(this).offset(); if you really just want the current element's offset
+	var relX = e.pageX - parentOffset.left;
+	var relY = e.pageY - parentOffset.top;
+	x1 = e.pageX;
+	y1 = e.pageY;
     });
-	
+
+    var idcntr = 0;
     $('#divDraw').mouseup(function(e) {
-	    var l = Math.min(x1, e.pageX);
-	    var r = Math.max(x1, e.pageX);
-	    var t = Math.min(y1, e.pageY);
-	    var b = Math.max(y1, e.pageY);
-	    
-	    $('#divDraw').append('<div style="background-color: #80fc05; ' +
-				 'position: fixed; left: ' + l + '; top: ' + t +
-				 '; bottom: ' + b + '; right: ' + r +
-				 '"><p>Success</p></div>')
+	var l = x1;
+	var r = e.pageX;
+	if (l > e.pageX) {
+	    l = e.pageX;
+	    r = x1;
+	}
+	var b = y1;
+	var t = e.pageY;
+	if (b < e.pageY) {
+	    b = e.pageY;
+	    t = y1;
+	}
+	
+	var pos = $('#divDraw').position();
+	l -= pos.left;
+	t -= pos.top;
+	b -= pos.top;
+	r -= pos.left;
+	var w = r - l;
+	var h = b - t;
+	l += 'px';
+	r += 'px';
+	b += 'px';
+	t += 'px';
+	
+	var totdiv = $('<div>').css({
+	    "border": "solid",
+	    "position": "absolute",
+	    "left": l,
+	    "top": t,
+	    "width": w,
+	    "height": h
+	});
+	totdiv.resizable();
+	var newid = 'divNew' + idcntr++;
+	totdiv.attr('id', newid);
+	
+	totdiv.appendTo($('#divDraw'));
+
+	//var elems = $("[id*=divNew]");
+	//alert(elems.length);
+	
     });
 });
